@@ -69,18 +69,25 @@ def read_excel_file(file_path, sheet_name=0):
         
         #Get key columns from new and previous sheets
         print(f"\nReading sheet: {xl.sheet_names[current_sheet]}")
-        current_codes = getKeyColumns(df_current[['CUSTOMER CODE','SAP CODE', 'DESCRIPTION', 'PO','SAP ORDER', 'PRODUCED QTY', 'INVOICE', 'ESTIMATED DELIVERY DATE']].to_string())
+        current_codes = getKeyColumns(df_current[['CUSTOMER CODE','SAP ORDER', 'SAP CODE', 'DESCRIPTION', 'PO', 'PRODUCED QTY', 'INVOICE', 'ESTIMATED DELIVERY DATE']].to_string())
         print('Found',len(current_codes),'rows in new sheet\n---')
         print(f"\nReading sheet: {xl.sheet_names[previous_current_sheet]}")
-        previous_codes = getKeyColumns(df_previous[['CUSTOMER CODE','SAP CODE', 'DESCRIPTION', 'PO','SAP ORDER', 'PRODUCED QTY', 'INVOICE', 'ESTIMATED DELIVERY DATE']].to_string())
+        previous_codes = getKeyColumns(df_previous[['CUSTOMER CODE', 'SAP ORDER', 'SAP CODE', 'DESCRIPTION', 'PO', 'PRODUCED QTY', 'INVOICE', 'ESTIMATED DELIVERY DATE']].to_string())
         print('Found',len(previous_codes),'rows in previous sheet\n---\n')
 
         #Get changed rows from new and previous sheets
         changed_rows = getChangedRows(current_codes, previous_codes)
         print('Found',len(changed_rows),'Significant Changes\n---')
+    
+        # Get Customer Order and SAP Order from changed rows
+        ans = []
         for i in changed_rows:
+            keyCodes = i[1].split('-')
+            ans.append('-'.join(keyCodes[:2]))
+        
+        print('Customer Order-SAP Order')
+        for i in ans:
             print(i)
-
         return df_current
 
     except Exception as e:
