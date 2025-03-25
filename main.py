@@ -55,7 +55,7 @@ def clear_filters(file_path):
 def read_excel_file(file_path, sheet_name=0):
     try:
         # Clear filters from all sheets
-        #clear_filters(file_path)
+        clear_filters(file_path)
         
         # Get list of all sheet names
         xl = pd.ExcelFile(file_path)
