@@ -78,16 +78,41 @@ def read_excel_file(file_path, sheet_name=0):
         #Get changed rows from new and previous sheets
         changed_rows = getChangedRows(current_codes, previous_codes)
         print('Found',len(changed_rows),'Significant Changes\n---')
+
+         # Load workbook for highlighting
+        wb = load_workbook(file_path)
+        ws = wb[xl.sheet_names[current_sheet]]
+        
+        # Define highlight style (yellow background)
+        from openpyxl.styles import PatternFill
+        highlight_fill = PatternFill(start_color='FFFF00',
+                                   end_color='FFFF00',
+                                   fill_type='solid')
+        
+        # Highlight changed rows
+        for row_info in changed_rows:
+            row_num = row_info[0]  # Get the row number
+            # Highlight all cells in the row
+            for cell in ws[row_num]:
+                cell.fill = highlight_fill
+        
+        # Save the workbook
+        wb.save(file_path)
+        print(f"Successfully highlighted {len(changed_rows)} changed rows")
     
         # Get Customer Order and SAP Order from changed rows
-        ans = []
-        for i in changed_rows:
-            keyCodes = i[1].split('-')
-            ans.append('-'.join(keyCodes[:2]))
+        # ans = []
+        # for i in changed_rows:
+        #     keyCodes = i[1].split('-')
+        #     ans.append('-'.join(keyCodes[:2]))
         
-        print('Customer Order-SAP Order')
-        for i in ans:
+        # print('Customer Order-SAP Order')
+        # for i in ans:
+        #     print(i)
+
+        for i in changed_rows:
             print(i)
+
         return df_current
 
     except Exception as e:
