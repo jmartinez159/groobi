@@ -4,6 +4,7 @@ import re
 
 def getKeyColumns(codes_string):
     ans = {}
+    # Formatting strings and adding them to a list
     codes_list = codes_string.split('\n')
     codes = [line.split()[1:] for line in codes_list]
     
@@ -29,9 +30,11 @@ def getKeyColumns(codes_string):
     return ans
 
 def getChangedRows(curr, prev):
+    # if curr key does not exist in prev we save it 
     ans = []
     for i in curr:
         if i not in prev:
+            # We want new keys from curr only
             ans.append([curr[i], i])
     return ans
 
@@ -55,15 +58,15 @@ def clear_filters(file_path):
 def read_excel_file(file_path, sheet_name=0):
     try:
         # Clear filters from all sheets
-        #clear_filters(file_path)
+        clear_filters(file_path)
         
         # Get list of all sheet names
         xl = pd.ExcelFile(file_path)
         print("\nAvailable sheets:", xl.sheet_names)
         
         # Read the new and previous sheets
-        current_sheet = len(xl.sheet_names)-2           # 2nd last sheet - New sheet
-        previous_current_sheet = len(xl.sheet_names)-3    # 3rd last sheet - Previous sheet
+        current_sheet = len(xl.sheet_names)-2               # 2nd last sheet - New sheet
+        previous_current_sheet = len(xl.sheet_names)-3      # 3rd last sheet - Previous sheet
         df_current = pd.read_excel(file_path, sheet_name=current_sheet)
         df_previous = pd.read_excel(file_path, sheet_name=previous_current_sheet)
         
